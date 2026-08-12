@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+# Installs agent-bus by symlinking this checkout into ~/.copilot, so `git pull`
+# updates the running extension without a second copy to keep in sync.
+set -euo pipefail
+
+REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+EXT_DIR="${COPILOT_HOME:-$HOME/.copilot}/extensions/agent-bus"
+BUS_DIR="${COPILOT_BUS_DIR:-${COPILOT_HOME:-$HOME/.copilot}/agent-bus}"
+
+link() {
+  local src="$1" dest="$2"
+  mkdir -p "$(dirname "$dest")"
+  if [ -e "$dest" ] && [ ! -L "$dest" ]; then
+    mv "$dest" "$dest.backup-$(date +%Y%m%d%H%M%S)"
+    echo "  moved aside existing $(basename "$dest") (kept as *.backup-*)"
+  fi
+  ln -sfn "$src" "$dest"
+  echo "  $dest -> $src"
+}
+
+echo "installing agent-bus from $REPO"
+link "$REPO/extension.mjs" "$EXT_DIR/extension.mjs"
+link "$REPO/statusline.mjs" "$BUS_DIR/statusline.mjs"
+
+if [ ! -f "$BUS_DIR/config.json" ]; then
+  echo '{ "workspaces": {} }' > "$BUS_DIR/config.json"
+  echo "  wrote an empty $BUS_DIR/config.json"
+fi
+
+cat <<EOF
+
+Done. The extension is user-scoped, so it loads in every interactive session — and stays
+inert until a session claims a role.
+
+Next:
+  1. Restart Copilot CLI (or run extensions_reload) to pick it up.
+  2. Open two sessions and tell each what it is, e.g.
+       "You're the coding agent for PR 42. Topic: pr-42, repo owner/myrepo."
+       "You're the reviewer for PR 42. Topic: pr-42, repo owner/myrepo."
+
+Optional statusline badge — add to ${COPILOT_HOME:-\$HOME/.copilot}/settings.json:
+  "statusLine": { "type": "command", "command": "$BUS_DIR/statusline.mjs", "refreshInterval": 10 }
+EOF

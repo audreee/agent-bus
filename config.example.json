@@ -1,0 +1,16 @@
+{
+  "workspaces": {
+    "/absolute/path/to/code-worktree": {
+      "role": "coder",
+      "topic": "pr-42",
+      "pr": 42,
+      "repo": "owner/repo"
+    },
+    "/absolute/path/to/review-worktree": {
+      "role": "reviewer",
+      "topic": "pr-42",
+      "pr": 42,
+      "repo": "owner/repo"
+    }
+  }
+}

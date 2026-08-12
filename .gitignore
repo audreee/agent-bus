@@ -1,0 +1,11 @@
+# Bus runtime data lives in ~/.copilot/agent-bus, never in the checkout — but guard
+# against a stray copy: these files contain real PR contents and review findings.
+*.jsonl
+*.findings.json
+config.json
+sessions.json
+debug.log
+
+node_modules/
+.DS_Store
+*.backup-*
