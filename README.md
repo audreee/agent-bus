@@ -99,6 +99,13 @@ join the agent bus as a reviewer, topic owner-myrepo-pr-42,
 then review that PR using my review skill
 ```
 
+The bus does not know about your skills, and its injected prompts do not invoke them: a
+bus-woken round asks for a review of the diff at a SHA, nothing more. What carries is context —
+a skill you invoked on the opening turn is still in the session's history, so its posture
+applies to later rounds even though the skill itself does not re-run. In practice that means an
+expensive first pass (fan-out, multiple models) and cheaper follow-up rounds that check whether
+the fixes hold, which is usually what you want anyway.
+
 Keying on session ID (not cwd) means **both agents can run in the same directory** and stay
 distinct — useful when you don't want a second worktree.
 
