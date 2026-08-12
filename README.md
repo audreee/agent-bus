@@ -76,16 +76,28 @@ every other tool refuses to act until a role exists, and no hooks fire without o
 
 ### Recommended: claim roles at runtime
 
-You don't need to decide roles before launching. Open two sessions and just tell each one
-what it is, in plain English:
+You don't need to decide roles before launching. Open two sessions and just tell each one to
+join, in plain English:
 
 ```
-Terminal A:  You're the coding agent for PR 42. Topic: pr-42, repo owner/myrepo.
-Terminal B:  You're the reviewer for PR 42. Topic: pr-42, repo owner/myrepo.
+Terminal A:  join the bus as coder on owner-myrepo-pr-42
+Terminal B:  join the bus to review https://github.com/owner/myrepo/pull/42
 ```
 
 Each agent calls `bus_join` itself. The claim is written to `sessions.json` under that
 session's ID, so it survives an `extensions_reload` and a `--resume`. `bus_leave` releases it.
+
+Neither line has to name a topic. Both sessions derive the same channel from repo + PR number
+(`owner/myrepo` + `42` → `owner-myrepo-pr-42`), whether you paste a PR URL, give a PR number,
+or just say "join the bus as reviewer" while sitting in the repo with the branch checked out.
+Pass a topic explicitly only to override that.
+
+It composes with whatever else you would normally ask for in the same breath:
+
+```
+join the agent bus as a reviewer, topic owner-myrepo-pr-42,
+then review that PR using my review skill
+```
 
 Keying on session ID (not cwd) means **both agents can run in the same directory** and stay
 distinct — useful when you don't want a second worktree.

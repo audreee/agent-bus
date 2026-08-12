@@ -34,9 +34,10 @@ inert until a session claims a role.
 
 Next:
   1. Restart Copilot CLI (or run extensions_reload) to pick it up.
-  2. Open two sessions and tell each what it is, e.g.
-       "You're the coding agent for PR 42. Topic: pr-42, repo owner/myrepo."
-       "You're the reviewer for PR 42. Topic: pr-42, repo owner/myrepo."
+  2. Open two sessions and tell each one to join, e.g.
+       "join the bus as coder on owner-myrepo-pr-42"
+       "join the bus to review https://github.com/owner/myrepo/pull/42"
+     The topic is optional — it is derived from the repo and PR when you leave it out.
 
 Optional statusline badge — add to ${COPILOT_HOME:-\$HOME/.copilot}/settings.json:
   "statusLine": { "type": "command", "command": "$BUS_DIR/statusline.mjs", "refreshInterval": 10 }
